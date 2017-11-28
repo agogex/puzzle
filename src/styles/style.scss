@@ -1,0 +1,69 @@
+// Colors
+$body_bg_color: #f2f2f2;
+$dropzone_wrapper_bg_color: #262626;
+$dragzone_wrapper_bg_color: #e6e6e6;
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    padding: 20px;
+    background: $body_bg_color;
+    color: #dedede;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#dropzone_wrapper {
+    width: 600px;
+    height: 600px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: flex-start;
+}
+
+#dragzone_wrapper {
+    background-color: $dragzone_wrapper_bg_color;
+    width: 390px;
+    height: 300px;
+    border: 1px solid #b7b7b7;
+    margin-top: 100px;
+    position: relative;
+}
+
+.dropzone {
+    background: #262626;
+    background-size: 0% !important;
+    width: 196px;
+    height: 196px;
+    border: 2px solid white;
+    margin: 0;
+}
+
+.dropzone.active {
+    background-size: cover !important;
+}
+
+.draggable {
+    position: absolute;
+    width: 130px;
+    height: 130px;
+    background: #f2f2f2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 48px;
+    color: #262626;
+
+    &.dropped {
+        visibility: hidden;
+    }
+}
+
+.drop-active {
+    background-color: red;
+}
