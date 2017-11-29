@@ -58,11 +58,23 @@ body {
     text-align: center;
 }
 
-#puzzle_done, #user_info {
+#puzzle_done, #user_info, #top_scores {
     visibility: hidden;
     opacity: 0;
     height: 0;
     transition: all .2s ease-out;
+}
+
+#puzzle_done {
+    text-align: center;
+}
+
+#top_scores {
+    color: darkgrey;
+    .scores_title {
+        text-align: center;
+        text-transform: uppercase;
+    }
 }
 
 .left {
