@@ -2,18 +2,71 @@
 $body_bg_color: #f2f2f2;
 $dropzone_wrapper_bg_color: #262626;
 $dragzone_wrapper_bg_color: #e6e6e6;
-
 * {
     box-sizing: border-box;
 }
 
 body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
     padding: 20px;
     background: $body_bg_color;
     color: #dedede;
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#user_form {
+    text-align: center;
+    transition: all .2s ease-out;
+    input,
+    label {
+        display: block;
+        margin: 15px 0;
+        text-transform: uppercase;
+    }
+    label {
+        color: darkgrey;
+    }
+    input {
+        width: 100%;
+        border: 0;
+        border-bottom: 1px solid #dedede;
+        height: 30px;
+        padding: 0 10px;
+        background-color: transparent;
+        outline: none;
+        transition: all .25s ease-out;
+    }
+    input:focus {
+        border-bottom: 2px solid darkgrey;
+    }
+}
+
+#name {
+    font-size: 24px;
+    text-align: center;
+    color: darkgrey;
+    text-transform: uppercase;
+}
+
+#counter {
+    color: darkgrey;
+    font-family: Courier New, Courier, monospace;
+    font-size: 48px;
+    text-align: center;
+}
+
+#puzzle_done, #user_info {
+    visibility: hidden;
+    opacity: 0;
+    height: 0;
+    transition: all .2s ease-out;
+}
+
+.left {
+    margin-right: 50px;
 }
 
 #dropzone_wrapper {
@@ -58,12 +111,7 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 48px;
     color: #262626;
-
     &.dropped {
         visibility: hidden;
     }
-}
-
-.drop-active {
-    background-color: red;
 }

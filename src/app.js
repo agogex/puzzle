@@ -2,12 +2,43 @@
 import './styles/style.scss';
 
 import * as interact from 'interactjs';
+import axios from 'axios';
+
+let username;
+let timer;
+let counter;
+let pieces;
+let score;
 
 window.onload = function () {
-
+  
   const img = new Image();
   img.src = './img/kotel.jpg';
   const imgUrls = [];
+
+  const userForm = document.querySelector('#user_form');
+  userForm.addEventListener('submit', event => {
+    event.preventDefault();
+    const input = document.querySelector('#username');
+    username = input.value;
+    counter = new Date();
+    timer = setInterval(() => {
+      const now = new Date();
+      const time = now - counter;
+      const _counter = document.querySelector('#counter');
+      let minutes = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
+      let seconds = Math.floor((time % (1000 * 60)) / 1000);
+      minutes = minutes <= 9 ? `0${minutes}` : minutes;
+      seconds = seconds <= 9 ? `0${seconds}` : seconds;
+      _counter.innerHTML = `${minutes}:${seconds}`;
+      score = time;
+    }, 1000);
+    document.querySelector('#name').innerHTML = username;
+    document.querySelector('#name').innerHTML = username;
+    hide(document.querySelector('#user_form'));
+    show(document.querySelector('#user_info'));
+    interact('.draggable').draggable(true);
+  });
 
   imgLoad(img).then((loadedImage) => {
     for (let i = 0, x = 0, y = 0; i < 9; i++ , x += 130) {
@@ -22,7 +53,7 @@ window.onload = function () {
       ctx.drawImage(loadedImage, x, y, 130, 130, 0, 0, 130, 130);
       imgUrls.push(canvas.toDataURL());
     }
-    console.log(imgUrls);
+    pieces = imgUrls.length;
   }).then(() => {
     const dropzoneWrapper = document.querySelector('#dropzone_wrapper');
     for (let i = 0; i < 9; i++) {
@@ -33,9 +64,10 @@ window.onload = function () {
       dropzone.style.backgroundSize = `cover`;
       dropzoneWrapper.appendChild(dropzone);
     }
-  }).then(initDropzones).then(() => initDragzones(imgUrls));
+  }).then(() => initDropzones(pieces)).then(() => initDragzones(imgUrls));
 
-
+  const save = document.querySelector('#save');
+  save.addEventListener('click', saveScore);
 }
 
 function imgLoad(img) {
@@ -49,6 +81,7 @@ function imgLoad(img) {
 function initDragzones(imgUrls) {
   interact('.draggable')
     .draggable({
+      enabled: false,
       inertia: true,
       restrict: {
         restriction: document.body,
@@ -59,8 +92,8 @@ function initDragzones(imgUrls) {
       onend: function (event) {
         const target = event.target;
         if(!target.classList.contains('active')) {
-          const x = random(0, 260);
-          const y = random(0, 170);
+          const x = (parseFloat(target.getAttribute('data-start-x')) || 0);
+          const y = (parseFloat(target.getAttribute('data-start-y')) || 0);
           setCoordinates(target, x, y);
         }
       }
@@ -83,6 +116,8 @@ function initDragzones(imgUrls) {
     const x = random(0, 260);
     const y = random(0, 170);
     setCoordinates(draggable, x, y);
+    draggable.setAttribute('data-start-x', x);
+    draggable.setAttribute('data-start-y', y);
     dragzoneWrapper.appendChild(draggable);
   }
 }
@@ -98,14 +133,13 @@ function setCoordinates(element, x, y) {
   element.setAttribute('data-y', y);
 }
 
-function initDropzones() {
+function initDropzones(pieces) {
   const dropzones = document.querySelectorAll('.dropzone');
 
   for (let dropzone of dropzones) {
 
     const id = dropzone.getAttribute('id');
     const draggableId = id.split('dropzone-').pop();
-
 
     interact(`#${id}`).dropzone({
       accept: `#draggable-${draggableId}`,
@@ -121,6 +155,10 @@ function initDropzones() {
       ondrop: function (event) {
         event.relatedTarget.classList.add('dropped');
         event.target.classList.add('active');
+        pieces--;
+        if(pieces === 0) {
+          puzzleDone(timer);
+        }
       },
       ondropdeactivate: function (event) {
       }
@@ -128,6 +166,30 @@ function initDropzones() {
   }
 }
 
+function puzzleDone(timer) {
+  show(document.querySelector('#puzzle_done'));
+  clearTimeout(timer);
+}
+
 function random(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function hide(element) {
+  element.style.visibility = 'hidden';
+  element.style.opacity = 0;
+  element.style.height = 0;
+}
+
+function show(element) {
+  element.style.visibility = 'visible';
+  element.style.opacity = 1;
+  element.style.height = 'inherit';
+}
+
+function saveScore () {
+  return axios.post(`http://localhost:3000/users`, {
+    name: username,
+    score
+  })
 }

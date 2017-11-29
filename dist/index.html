@@ -10,8 +10,26 @@
 </head>
 
 <body>
-    <div id="dropzone_wrapper"></div>
-    <div id="dragzone_wrapper"></div>
+    <div class="left">
+        <div id="dropzone_wrapper"></div>
+    </div>
+    <div class="right">
+        <form id="user_form">
+            <label>Your Name</label>
+            <input id="username" type="text" placeholder="Enter Your Name" required>
+            <button id="start">Start Game</button>
+        </form>
+        <div id="user_info">
+            <div id="name">user</div>
+            <div id="counter">--:--</div>
+        </div>
+        <div id="puzzle_done">
+            <div id="score"></div>
+            <button id="save">Save</button>
+            <button>New Game</button>
+        </div>
+        <div id="dragzone_wrapper"></div>
+    </div>
     <script src="bundle.js"></script>
 </body>
 
